@@ -20,10 +20,14 @@ if __name__ == "__main__":
     if user[0].lower() == 'n':
         quit()
     
+    board_view.clearScreen()
+
     #main game loop
-    won = False #loop while game in progress
-    while(not won):
+    won = False #loop while game in progress\
+    draw = False
+    while(not won and not draw):
         #display the initial board (contains number positions)
+        board_view.clearScreen()
         board_view.renderBoard(board)
         print("\n")
 
@@ -39,10 +43,17 @@ if __name__ == "__main__":
 
             #try to update board
             success = board.updateBoard(move)
+            print("Board Updated")
 
-        result = board.XInARow()
+        result = board.isWon()
         won = result['won']
-        
+        draw = board.isDraw()
 
-    print(result['winner'] + " is the Winner!")
+    board_view.renderBoard(board)
+    print()
+
+    if draw:
+        print("This game is a draw...")
+    else: 
+        print(result['winner'] + " is the Winner!")
 

@@ -48,7 +48,6 @@ def renderBoard(board):
 
         """
         #clear the screen first
-        clearScreen()
 
         rowDivider = ['---+---+---'] * (board.size - 1) #characters that divide board rows
         index = 0 #printed to describe location of cells to user

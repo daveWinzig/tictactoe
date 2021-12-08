@@ -5,11 +5,9 @@ class Board:
 
     def __init__(self, size=3):
         self.size = size #number of rows and columns in board
-        self.rows = size # number of rows in board
-        self.columns = size # number of columns in board
         self.scores = {'X' : 0, 'O' : 0} #player scores
         self.nextMove = 'X' #track current player
-        self.XOMap = {'X' : 'O','O' : 'X'} #used for reference
+        self.XOMap = {'X' : 'O','O' : 'X'} #used for swapping player turns
         self.XO = ['X', 'O'] 
         self.board = self.initBoard() # empty board of rows x columns size
 
@@ -18,7 +16,7 @@ class Board:
         """
         create a board of rows x columns - starts with empty values
         """
-        return [[None for column in range(self.columns)] for row in range(self.rows)]
+        return [[None for column in range(self.size)] for row in range(self.size)]
 
 
     def locationToCoords(self, location):
@@ -72,7 +70,20 @@ class Board:
         if score:
             self.scores = {'X' : 0, 'O' : 0}
 
-    def XInARow(self):
+    def isDraw(self):
+        """
+        Determine if current game board represents a draw.
+        Returns True if a draw.
+        """
+        for row in self.board:
+            for col in row:
+                if col == None:
+                    return False
+        
+        return True
+
+
+    def isWon(self):
         """
         Scan to see if there are X in a row
         Value - the game token to be checked.
@@ -93,6 +104,7 @@ class Board:
         if True in rowResult:
             result['won'] = True
             result['winner'] = self.XO[rowResult.index(True)]
+            return result
 
         # column scan
         for i in range(size):
@@ -104,12 +116,30 @@ class Board:
             if inARow == 3:
                 result['won'] = True
                 result['winner'] = compValue
-                break
+                return result
 
         #diagonal scan
 
-        #TODO
+        compValue = self.board[0][0]
+        diag = False
+        for i in range(3):
+            diag = self.board[i][i] == compValue and compValue in self.XO
+
+        if diag:
+                    result['won'] = True
+                    result['winner'] = compValue
+                    return result
+
+        refSize = self.size - 1
+        compValue = self.board[0][refSize]
+        diag = False
+        for i in range(3):
+            diag = self.board[i][refSize - i] == compValue and compValue in self.XO
+
+        if diag:
+            result['won'] = True
+            result['winner'] = compValue
+            return result
         
         return result
 
-        
